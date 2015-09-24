@@ -8,5 +8,5 @@ import kjrg.kmeans.traditionalkmeans.point.Point;
 public interface DataProvider {
 
 	List<Point> getData();
-	void saveData(Map<Long, Long> assignment, String outputFilepath);
+	void saveData(Map<Long, Long> assignment);
 }

@@ -26,7 +26,7 @@ public class DataProviderImpl implements DataProvider {
 	}
 
 	@Override
-	public void saveData(Map<Long, Long> assignment, String outputFilepath) {
+	public void saveData(Map<Long, Long> assignment) {
 		// TODO Auto-generated method stub
 	}
 }
