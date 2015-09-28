@@ -12,7 +12,7 @@ public class Cluster {
 
 	public Cluster(Long id, List<Double> coordinates) {
 		this.id = id;
-		this.centroidCoordinates = coordinates;
+		this.centroidCoordinates = new ArrayList<>(coordinates);
 	}
 
 	public Long getId() {
