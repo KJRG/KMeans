@@ -19,4 +19,9 @@ public class Point {
 	public List<Double> getCoordinates() {
 		return coordinates;
 	}
+
+	@Override
+	public String toString() {
+		return "Point [id=" + id + ", coordinates=" + coordinates + "]";
+	}
 }
