@@ -1,8 +1,10 @@
 package kjrg.kmeans.traditionalkmeans.dataprovider.impl;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +69,29 @@ public class DataProviderImpl implements DataProvider {
 	}
 
 	@Override
-	public void saveData(Map<Long, Long> assignment) {
-		// TODO Auto-generated method stub
+	public void saveData(Map<Long, Long> assignment) throws IOException {
+		if(assignment == null) {
+			throw new NullPointerException("Null argument passed to method savaData()");
+		}
+		
+		BufferedWriter writer = null;
+		try {
+			writer = new BufferedWriter(new FileWriter(outputFilepath));
+			
+			for(Long pointId : assignment.keySet()) {
+				Long clusterId = assignment.get(pointId);
+				writer.write("Point " + pointId + "\t: cluster " + clusterId + System.lineSeparator());
+			}
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			if(writer != null) {
+				try {
+					writer.close();
+				} catch(IOException e) {
+					throw e;
+				}
+			}
+		}
 	}
 }

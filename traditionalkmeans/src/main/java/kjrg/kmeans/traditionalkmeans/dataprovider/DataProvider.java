@@ -11,5 +11,5 @@ import kjrg.kmeans.traditionalkmeans.point.Point;
 public interface DataProvider {
 
 	List<Point> getData() throws IOException, FileNotFoundException, BadDataException;
-	void saveData(Map<Long, Long> assignment);
+	void saveData(Map<Long, Long> assignment) throws IOException;
 }
