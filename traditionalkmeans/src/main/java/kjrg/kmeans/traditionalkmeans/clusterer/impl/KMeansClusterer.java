@@ -29,8 +29,8 @@ public class KMeansClusterer implements Clusterer {
 		if(points == null || numberOfClusters == null) {
 			throw new NullPointerException("Null pointer was passed to method performClustering.");
 		}
-		if(numberOfClusters > points.size()) {
-			throw new IllegalArgumentException("The number of clusters should not be greater than number of points.");
+		if(numberOfClusters > points.size() || numberOfClusters < 1) {
+			throw new IllegalArgumentException("Wrong number of clusters.");
 		}
 		
 		Map<Long, Long> oldAssignment = Collections.emptyMap();
