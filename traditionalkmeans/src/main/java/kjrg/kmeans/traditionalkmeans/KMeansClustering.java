@@ -14,12 +14,12 @@ import kjrg.kmeans.traditionalkmeans.distance.impl.EuclideanDistance;
 import kjrg.kmeans.traditionalkmeans.exception.BadDataException;
 import kjrg.kmeans.traditionalkmeans.point.Point;
 
-public class KMeansClustering  {
-	
-    public static void main(String[] args) {
-    	DataProvider dataProvider = new DataProviderImpl(args[0], args[1]);
-    	List<Point> points = new ArrayList<>();
-    	try {
+public class KMeansClustering {
+
+	public static void main(String[] args) {
+		DataProvider dataProvider = new DataProviderImpl(args[0], args[1]);
+		List<Point> points = new ArrayList<>();
+		try {
 			points = dataProvider.getData();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -28,13 +28,13 @@ public class KMeansClustering  {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	
-    	Clusterer clusterer = new KMeansClusterer(new EuclideanDistance());
-    	Map<Long, Long> assignment = clusterer.performClustering(points, 2);
-    	try {
+
+		Clusterer clusterer = new KMeansClusterer(new EuclideanDistance());
+		Map<Long, Long> assignment = clusterer.performClustering(points, Integer.valueOf(args[2]));
+		try {
 			dataProvider.saveData(assignment);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 }
