@@ -17,6 +17,11 @@ import kjrg.kmeans.traditionalkmeans.point.Point;
 public class KMeansClustering {
 
 	public static void main(String[] args) {
+		if(args.length < 3) {
+			System.out.println("Not enough arguments");
+			System.exit(1);
+		}
+		
 		DataProvider dataProvider = new DataProviderImpl(args[0], args[1]);
 		List<Point> points = new ArrayList<>();
 		try {
