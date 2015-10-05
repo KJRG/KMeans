@@ -30,7 +30,12 @@ public class KMeansClustering {
 		}
 
 		Clusterer clusterer = new KMeansClusterer(new EuclideanDistance());
+		System.out.println("Starting clustering");
+		Long startTime = System.nanoTime();
 		Map<Long, Long> assignment = clusterer.performClustering(points, Integer.valueOf(args[2]));
+		Long stopTime = System.nanoTime();
+		System.out.println("Clustering finished, computations time: " + (stopTime - startTime) / 1000000 + "[ms]");
+
 		try {
 			dataProvider.saveData(assignment);
 		} catch (IOException e) {
