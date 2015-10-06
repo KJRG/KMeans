@@ -4,11 +4,11 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import kjrg.kmeans.traditionalkmeans.assignmentdata.AssignmentData;
 import kjrg.kmeans.traditionalkmeans.distance.impl.EuclideanDistance;
 import kjrg.kmeans.traditionalkmeans.point.Point;
 
@@ -65,9 +65,11 @@ public class KMeansClustererTest {
 		List<Point> points = Arrays.asList(new Point(1L, Arrays.asList(0.0, 0.0)),
 				new Point(2L, Arrays.asList(1.0, 1.0)), new Point(3L, Arrays.asList(2.0, 3.0)));
 		// when
-		Map<Long, Long> assignment = kMeansClusterer.performClustering(points, 3);
+		AssignmentData assignmentData = kMeansClusterer.performClustering(points, 3);
 		// then
-		assertNotNull(assignment);
-		assertEquals(3, assignment.size());
+		assertNotNull(assignmentData);
+		assertEquals(3, assignmentData.getPoints().size());
+		assertEquals(3, assignmentData.getClusters().size());
+		assertEquals(3, assignmentData.getAssignment().size());
 	}
 }

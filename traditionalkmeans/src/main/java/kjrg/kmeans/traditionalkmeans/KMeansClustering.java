@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import kjrg.kmeans.traditionalkmeans.assignmentdata.AssignmentData;
 import kjrg.kmeans.traditionalkmeans.clusterer.Clusterer;
 import kjrg.kmeans.traditionalkmeans.clusterer.impl.KMeansClusterer;
 import kjrg.kmeans.traditionalkmeans.dataprovider.DataProvider;
@@ -37,12 +37,13 @@ public class KMeansClustering {
 		Clusterer clusterer = new KMeansClusterer(new EuclideanDistance());
 		System.out.println("Starting clustering");
 		Long startTime = System.nanoTime();
-		Map<Long, Long> assignment = clusterer.performClustering(points, Integer.valueOf(args[2]));
+		AssignmentData assignmentData = clusterer.performClustering(points, Integer.valueOf(args[2]));
 		Long stopTime = System.nanoTime();
 		System.out.println("Clustering finished, computations time: " + (stopTime - startTime) / 1000000 + "[ms]");
+		
 
 		try {
-			dataProvider.saveData(assignment);
+			dataProvider.saveData(assignmentData);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

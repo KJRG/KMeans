@@ -8,8 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import kjrg.kmeans.traditionalkmeans.assignmentdata.AssignmentData;
+import kjrg.kmeans.traditionalkmeans.cluster.Cluster;
 import kjrg.kmeans.traditionalkmeans.dataprovider.DataProvider;
 import kjrg.kmeans.traditionalkmeans.exception.BadDataException;
 import kjrg.kmeans.traditionalkmeans.point.Point;
@@ -69,8 +70,8 @@ public class DataProviderImpl implements DataProvider {
 	}
 
 	@Override
-	public void saveData(Map<Long, Long> assignment) throws IOException {
-		if(assignment == null) {
+	public void saveData(AssignmentData assignmentData) throws IOException {
+		if(assignmentData == null) {
 			throw new NullPointerException("Null argument passed to method savaData()");
 		}
 		
@@ -78,9 +79,10 @@ public class DataProviderImpl implements DataProvider {
 		try {
 			writer = new BufferedWriter(new FileWriter(outputFilepath));
 			
-			for(Long pointId : assignment.keySet()) {
-				Long clusterId = assignment.get(pointId);
-				writer.write("Point " + pointId + "\t: cluster " + clusterId + System.lineSeparator());
+			for(Point p : assignmentData.getPoints()) {
+				Long clusterId = assignmentData.getAssignment().get(p.getId());
+				Cluster cluster = assignmentData.getClusters().stream().filter(c -> clusterId == c.getId()).findFirst().get();
+				writer.write(p.toString() + " : " + cluster.toString() + System.lineSeparator());
 			}
 		} catch (IOException e) {
 			throw e;

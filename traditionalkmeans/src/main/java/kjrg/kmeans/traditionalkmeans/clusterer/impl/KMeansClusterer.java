@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import kjrg.kmeans.traditionalkmeans.assignmentdata.AssignmentData;
 import kjrg.kmeans.traditionalkmeans.cluster.Cluster;
 import kjrg.kmeans.traditionalkmeans.clusterer.Clusterer;
 import kjrg.kmeans.traditionalkmeans.distance.Distance;
@@ -18,14 +19,16 @@ public class KMeansClusterer implements Clusterer {
 
 	private Distance distance;
 	private Random random;
+	private List<Cluster> clusters;
 	
 	public KMeansClusterer(Distance distance) {
 		this.distance = distance;
 		random = new Random();
+		clusters = Collections.emptyList();
 	}
 	
 	@Override
-	public Map<Long, Long> performClustering(List<Point> points, Integer numberOfClusters) {
+	public AssignmentData performClustering(List<Point> points, Integer numberOfClusters) {
 		if(points == null || numberOfClusters == null) {
 			throw new NullPointerException("Null pointer was passed to method performClustering.");
 		}
@@ -58,7 +61,12 @@ public class KMeansClusterer implements Clusterer {
 			}
 		} while(!currentAssignment.equals(oldAssignment));
 		
-		return currentAssignment;
+		this.clusters = clusters;
+		return new AssignmentData(points, clusters, currentAssignment);
+	}
+	
+	public List<Cluster> getClusters() {
+		return clusters;
 	}
 
 	private List<Cluster> initRandomClusters(List<Point> points, Integer numberOfClusters) {

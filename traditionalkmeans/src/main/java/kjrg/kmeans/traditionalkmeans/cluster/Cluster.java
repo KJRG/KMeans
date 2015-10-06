@@ -55,4 +55,9 @@ public class Cluster {
 
 		centroidCoordinates = calculatedCentroidCoordinates;
 	}
+
+	@Override
+	public String toString() {
+		return "Cluster [id=" + id + ", centroidCoordinates=" + centroidCoordinates + "]";
+	}
 }
