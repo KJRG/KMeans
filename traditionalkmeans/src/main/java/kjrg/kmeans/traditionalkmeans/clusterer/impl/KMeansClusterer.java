@@ -19,12 +19,10 @@ public class KMeansClusterer implements Clusterer {
 
 	private Distance distance;
 	private Random random;
-	private List<Cluster> clusters;
 	
 	public KMeansClusterer(Distance distance) {
 		this.distance = distance;
 		random = new Random();
-		clusters = Collections.emptyList();
 	}
 	
 	@Override
@@ -61,12 +59,7 @@ public class KMeansClusterer implements Clusterer {
 			}
 		} while(!currentAssignment.equals(oldAssignment));
 		
-		this.clusters = clusters;
 		return new AssignmentData(points, clusters, currentAssignment);
-	}
-	
-	public List<Cluster> getClusters() {
-		return clusters;
 	}
 
 	private List<Cluster> initRandomClusters(List<Point> points, Integer numberOfClusters) {
