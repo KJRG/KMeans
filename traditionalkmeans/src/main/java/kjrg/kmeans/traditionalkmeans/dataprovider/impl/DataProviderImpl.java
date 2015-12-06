@@ -17,7 +17,7 @@ import kjrg.kmeans.traditionalkmeans.point.Point;
 
 public class DataProviderImpl implements DataProvider {
 
-	private static final String SEPARATOR = ",";
+	private static final String SEPARATOR = ";";
 	
 	private String inputFilepath;
 	private String outputFilepath;
