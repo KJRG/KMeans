@@ -8,6 +8,7 @@ import java.util.List;
 import kjrg.kmeans.traditionalkmeans.assignmentdata.AssignmentData;
 import kjrg.kmeans.traditionalkmeans.clusterer.Clusterer;
 import kjrg.kmeans.traditionalkmeans.clusterer.impl.KMeansClusterer;
+import kjrg.kmeans.traditionalkmeans.clusterer.impl.ParallelKMeansClusterer;
 import kjrg.kmeans.traditionalkmeans.dataprovider.DataProvider;
 import kjrg.kmeans.traditionalkmeans.dataprovider.impl.DataProviderImpl;
 import kjrg.kmeans.traditionalkmeans.distance.impl.EuclideanDistance;
@@ -34,7 +35,8 @@ public class KMeansClustering {
 			e.printStackTrace();
 		}
 
-		Clusterer clusterer = new KMeansClusterer(new EuclideanDistance());
+//		Clusterer clusterer = new KMeansClusterer(new EuclideanDistance());
+		Clusterer clusterer = new ParallelKMeansClusterer(new EuclideanDistance());
 		System.out.println("Starting clustering");
 		Long startTime = System.nanoTime();
 		AssignmentData assignmentData = clusterer.performClustering(points, Integer.valueOf(args[2]));
