@@ -43,7 +43,7 @@ public class RandomInstanceGenerator {
 		
 		for(int i = 0; i < numberOfClusters; i++) {
 			int middle = start + step * i;
-			int range = 500;
+			int range = 1250;
 			
 			System.out.println(middle + " " + range);
 			
