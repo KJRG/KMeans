@@ -47,7 +47,7 @@ public class DataProviderImpl implements DataProvider {
 				numberOfFeatures = features.length;
 				
 				List<Double> featuresValues = new ArrayList<>();
-				for(int i = 0; i < numberOfFeatures - 1; i++) {
+				for(int i = 0; i < numberOfFeatures; i++) {
 					featuresValues.add(Double.parseDouble(features[i]));
 				}
 				

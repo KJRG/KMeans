@@ -9,7 +9,6 @@ import java.util.Random;
 
 public class RandomInstanceGenerator {
 
-//	private static final int POINTS_IN_CLUSTER = 100000;
 	private static final int POINTS_IN_CLUSTER = 20000;
 	private static final String OUTPUT = "C:\\KMeans\\random-data.csv";
 	private static final String SEPARATOR = ",";
@@ -20,7 +19,7 @@ public class RandomInstanceGenerator {
 			writer = new BufferedWriter(new FileWriter(OUTPUT));
 			
 			for(Point p : points) {
-				writer.write(p.getX() + SEPARATOR + p.getY() + SEPARATOR + "x\n");
+				writer.write(p.getX() + SEPARATOR + p.getY());
 			}
 		} catch (IOException e) {
 			throw e;
