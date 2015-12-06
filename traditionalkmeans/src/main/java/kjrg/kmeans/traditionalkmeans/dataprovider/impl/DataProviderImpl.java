@@ -79,10 +79,14 @@ public class DataProviderImpl implements DataProvider {
 		try {
 			writer = new BufferedWriter(new FileWriter(outputFilepath));
 			
+//			for(Point p : assignmentData.getPoints()) {
+//				Long clusterId = assignmentData.getAssignment().get(p.getId());
+//				Cluster cluster = assignmentData.getClusters().stream().filter(c -> clusterId == c.getId()).findFirst().get();
+//				writer.write(p.toString() + " : " + cluster.toString() + System.lineSeparator());
+//			}
 			for(Point p : assignmentData.getPoints()) {
-				Long clusterId = assignmentData.getAssignment().get(p.getId());
-				Cluster cluster = assignmentData.getClusters().stream().filter(c -> clusterId == c.getId()).findFirst().get();
-				writer.write(p.toString() + " : " + cluster.toString() + System.lineSeparator());
+				writer.write(p.toString() + " : " + p.getAssignedClusterId());
+				writer.newLine();
 			}
 		} catch (IOException e) {
 			throw e;

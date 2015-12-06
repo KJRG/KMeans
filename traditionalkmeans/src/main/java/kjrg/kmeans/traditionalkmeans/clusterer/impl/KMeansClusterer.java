@@ -34,8 +34,8 @@ public class KMeansClusterer implements Clusterer {
 			throw new IllegalArgumentException("Wrong number of clusters.");
 		}
 		
-		Map<Long, Long> oldAssignment = Collections.emptyMap();
-		Map<Long, Long> currentAssignment = Collections.emptyMap();
+		Map<Cluster, List<Point>> oldAssignment = Collections.emptyMap();
+		Map<Cluster, List<Point>> currentAssignment = Collections.emptyMap();
 		
 		/*
 		 * Step 1 - initialize clusters with random points.
@@ -54,8 +54,9 @@ public class KMeansClusterer implements Clusterer {
 			 * Step 3 - recalculate clusters centroids.
 			 */
 			for(Cluster c : clusters) {
-				List<Point> assignedPoints = points.stream().filter(p -> c.getId() == p.getAssignedClusterId()).collect(Collectors.toList());
-				c.recalculateCentroid(assignedPoints);
+//				List<Point> assignedPoints = points.stream().filter(p -> c.getId() == p.getAssignedClusterId()).collect(Collectors.toList());
+//				c.recalculateCentroid(assignedPoints);
+				c.recalculateCentroid(currentAssignment.get(c));
 			}
 		} while(!currentAssignment.equals(oldAssignment));
 		
@@ -78,21 +79,28 @@ public class KMeansClusterer implements Clusterer {
 		return clusters;
 	}
 	
-	private Map<Long, Long> assignPointsToClusters(List<Point> points, List<Cluster> clusters) {
-		Map<Long, Long> assignment = new HashMap<>();
+	private Map<Cluster, List<Point>> assignPointsToClusters(List<Point> points, List<Cluster> clusters) {
+		Map<Cluster, List<Point>> assignment = new HashMap<>();
+		
+		for(Cluster c: clusters) {
+			assignment.put(c, new ArrayList<>());
+		}
 		
 		for(Point p : points) {
 			Double minDistance = Double.MAX_VALUE;
-			Long nearestClusterId = 0L;
+//			Long nearestClusterId = 0L;
+			Cluster nearestCluster = null;
 			for(Cluster c : clusters) {
 				Double distanceBetween = distance.distanceBetween(p, c);
 				if(distanceBetween < minDistance) {
 					minDistance = distanceBetween;
-					nearestClusterId = c.getId();
+//					nearestClusterId = c.getId();
+					nearestCluster = c;
 				}
 			}
-			p.setAssignedClusterId(nearestClusterId);
-			assignment.put(p.getId(), nearestClusterId);
+			p.setAssignedClusterId(nearestCluster.getId());
+//			assignment.put(p.getId(), nearestClusterId);
+			assignment.get(nearestCluster).add(p);
 		}
 		
 		return assignment;

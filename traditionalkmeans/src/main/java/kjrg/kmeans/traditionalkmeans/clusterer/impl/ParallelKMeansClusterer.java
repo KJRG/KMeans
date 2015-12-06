@@ -34,8 +34,8 @@ public class ParallelKMeansClusterer implements Clusterer {
 			throw new IllegalArgumentException("Wrong number of clusters.");
 		}
 		
-		Map<Long, Long> oldAssignment = Collections.emptyMap();
-		Map<Long, Long> currentAssignment = Collections.emptyMap();
+		Map<Cluster, List<Point>> oldAssignment = Collections.emptyMap();
+		Map<Cluster, List<Point>> currentAssignment = Collections.emptyMap();
 		
 		/*
 		 * Step 1 - initialize clusters with random points.
@@ -44,22 +44,27 @@ public class ParallelKMeansClusterer implements Clusterer {
 		
 		do {
 			oldAssignment = new HashMap<>(currentAssignment);
+		
+			System.out.println("Iteration");
 			
 			/*
 			 * Step 2 - assign each point to cluster with nearest centroid.
 			 */
 			currentAssignment = assignPointsToClusters(points, clusters);
+			Map<Cluster, List<Point>> duplicate = currentAssignment;
 			
 			/*
 			 * Step 3 - recalculate clusters centroids.
 			 */
 			clusters.parallelStream().forEach(c -> {
-				List<Point> assignedPoints = points.stream().filter(p -> c.getId() == p.getAssignedClusterId()).collect(Collectors.toList());
-				c.recalculateCentroid(assignedPoints);
+//				List<Point> assignedPoints = points.stream().filter(p -> c.getId() == p.getAssignedClusterId()).collect(Collectors.toList());
+//				c.recalculateCentroid(assignedPoints);
+				c.recalculateCentroid(duplicate.get(c));
 			});
 		} while(!currentAssignment.equals(oldAssignment));
 		
 		return new AssignmentData(points, clusters, currentAssignment);
+//		return null;
 	}
 
 	private List<Cluster> initRandomClusters(List<Point> points, Integer numberOfClusters) {
@@ -78,22 +83,51 @@ public class ParallelKMeansClusterer implements Clusterer {
 		return clusters;
 	}
 	
-	private Map<Long, Long> assignPointsToClusters(List<Point> points, List<Cluster> clusters) {
-		Map<Long, Long> assignment = new HashMap<>();
+	private Map<Cluster, List<Point>> assignPointsToClusters(List<Point> points, List<Cluster> clusters) {
+		Map<Cluster, List<Point>> assignment = new HashMap<>();
 		
+		for(Cluster c: clusters) {
+			assignment.put(c, new ArrayList<>());
+		}
+		
+		/*
 		points.parallelStream().forEach(point -> {
 			Double minDistance = Double.MAX_VALUE;
-			Long nearestClusterId = 0L;
+//			Long nearestClusterId = 0L;
+			Cluster nearestCluster = null;
 			for(Cluster c : clusters) {
 				Double distanceBetween = distance.distanceBetween(point, c);
 				if(distanceBetween < minDistance) {
 					minDistance = distanceBetween;
-					nearestClusterId = c.getId();
+//					nearestClusterId = c.getId();
+					nearestCluster = c;
 				}
 			}
-			point.setAssignedClusterId(nearestClusterId);
-			synchronized (this) {				
-				assignment.put(point.getId(), point.getAssignedClusterId());
+			point.setAssignedClusterId(nearestCluster.getId());
+//			assignment.put(p.getId(), nearestClusterId);
+			synchronized (assignment) {				
+				assignment.get(nearestCluster).add(point);
+//				assignment.put(point.getId(), point.getAssignedClusterId());
+			}
+		});
+		*/
+		
+		points.parallelStream().forEach(p -> {
+			Double minDistance = Double.MAX_VALUE;
+//			Long nearestClusterId = 0L;
+			Cluster nearestCluster = null;
+			for(Cluster c : clusters) {
+				Double distanceBetween = distance.distanceBetween(p, c);
+				if(distanceBetween < minDistance) {
+					minDistance = distanceBetween;
+//					nearestClusterId = c.getId();
+					nearestCluster = c;
+				}
+			}
+			p.setAssignedClusterId(nearestCluster.getId());
+//			assignment.put(p.getId(), nearestClusterId);
+			synchronized (assignment) {
+				assignment.get(nearestCluster).add(p);
 			}
 		});
 		

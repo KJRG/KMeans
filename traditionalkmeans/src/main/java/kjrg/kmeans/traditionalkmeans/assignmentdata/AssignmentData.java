@@ -10,12 +10,12 @@ public class AssignmentData {
 
 	private List<Point> points;
 	private List<Cluster> clusters;
-	private Map<Long, Long> assignment;
+	private Map<Cluster, List<Point>> assignment;
 	
-	public AssignmentData(List<Point> points, List<Cluster> clusters, Map<Long, Long> assignment) {
+	public AssignmentData(List<Point> points, List<Cluster> clusters, Map<Cluster, List<Point>> currentAssignment) {
 		this.points = points;
 		this.clusters = clusters;
-		this.assignment = assignment;
+		this.assignment = currentAssignment;
 	}
 
 	public List<Point> getPoints() {
@@ -26,7 +26,7 @@ public class AssignmentData {
 		return clusters;
 	}
 
-	public Map<Long, Long> getAssignment() {
+	public Map<Cluster, List<Point>> getAssignment() {
 		return assignment;
 	}
 }
