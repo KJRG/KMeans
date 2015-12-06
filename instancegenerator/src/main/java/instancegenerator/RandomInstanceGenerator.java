@@ -45,8 +45,6 @@ public class RandomInstanceGenerator {
 			int middle = start + step * i;
 			int range = 1250;
 			
-			System.out.println(middle + " " + range);
-			
 			Random rx = new Random();
 			Random ry = new Random();
 			
