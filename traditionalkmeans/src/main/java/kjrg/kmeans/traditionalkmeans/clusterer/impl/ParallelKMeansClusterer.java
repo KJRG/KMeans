@@ -19,10 +19,12 @@ public class ParallelKMeansClusterer implements Clusterer {
 
 	private Distance distance;
 	private Random random;
+	private Object lock;
 	
 	public ParallelKMeansClusterer(Distance distance) {
 		this.distance = distance;
 		random = new Random();
+		lock = new Object();
 	}
 	
 	@Override
@@ -92,7 +94,7 @@ public class ParallelKMeansClusterer implements Clusterer {
 				}
 			}
 			point.setAssignedClusterId(nearestClusterId);
-			synchronized (this) {				
+			synchronized (lock) {				
 				assignment.put(point.getId(), point.getAssignedClusterId());
 			}
 		});
