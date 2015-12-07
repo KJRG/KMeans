@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import kjrg.kmeans.traditionalkmeans.assignmentdata.AssignmentData;
 import kjrg.kmeans.traditionalkmeans.clusterer.Clusterer;
 import kjrg.kmeans.traditionalkmeans.clusterer.impl.KMeansClusterer;
 import kjrg.kmeans.traditionalkmeans.clusterer.impl.ParallelKMeansClusterer;
@@ -24,7 +23,37 @@ public class KMeansClustering {
 	private static final String PROPERTIES_FILENAME = "kjrg/kmeans/traditionalkmeans/config.properties";
 	private static final String SEP = System.getProperty("line.separator");
 	
-	private static final void saveReport(String report, String filepath) {
+	private static long regularKMeansMeasurements(int numberOfMeasurements, int numberOfClusters, List<Point> points) {
+		Clusterer clusterer = new KMeansClusterer(new EuclideanDistance());
+		long totalTime = 0;
+		
+		for(int i = 1; i <= numberOfMeasurements; i++) {
+			System.out.println("Algorytm szeregowy - pomiar " + i);
+			Long startTime = System.nanoTime();
+			clusterer.performClustering(points, numberOfClusters);
+			Long stopTime = System.nanoTime();
+			totalTime += (stopTime - startTime) / 1000000;
+		}
+		
+		return totalTime / numberOfMeasurements;
+	}
+	
+	private static long multithreadedKMeansMeasurements(int numberOfMeasurements, int numberOfClusters, List<Point> points) {
+		Clusterer clusterer = new ParallelKMeansClusterer(new EuclideanDistance());
+		long totalTime = 0;
+		
+		for(int i = 1; i <= numberOfMeasurements; i++) {
+			System.out.println("Algorytm wielowątkowy - pomiar " + i);
+			Long startTime = System.nanoTime();
+			clusterer.performClustering(points, numberOfClusters);
+			Long stopTime = System.nanoTime();
+			totalTime += (stopTime - startTime) / 1000000;
+		}
+		
+		return totalTime / numberOfMeasurements;
+	}
+	
+	private static void saveReport(String report, String filepath) {
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(filepath);
@@ -95,35 +124,13 @@ public class KMeansClustering {
 			reportBuilder.append("Dane wejściowe: " + filepath + SEP);
 			
 			if(regular) {
-				Clusterer clusterer = new KMeansClusterer(new EuclideanDistance());
-				long totalTime = 0;
-				
-				for(int i = 1; i <= numberOfMeasurements; i++) {
-					System.out.println("Algorytm szeregowy - pomiar " + i);
-					Long startTime = System.nanoTime();
-					clusterer.performClustering(points, numberOfClusters);
-					Long stopTime = System.nanoTime();
-					totalTime += (stopTime - startTime) / 1000000;
-				}
-				
-				totalTime /= numberOfMeasurements;
-				reportBuilder.append("Średni czas dla szeregowego algorytmu k-średnich: " + totalTime + " [ms]" + SEP);
+				long time = regularKMeansMeasurements(numberOfMeasurements, numberOfClusters, points);
+				reportBuilder.append("Średni czas dla szeregowego algorytmu k-średnich: " + time + " [ms]" + SEP);
 			}
 			
 			if(multithreading) {
-				Clusterer clusterer = new ParallelKMeansClusterer(new EuclideanDistance());
-				long totalTime = 0;
-				
-				for(int i = 1; i <= numberOfMeasurements; i++) {
-					System.out.println("Algorytm wielowątkowy - pomiar " + i);
-					Long startTime = System.nanoTime();
-					clusterer.performClustering(points, numberOfClusters);
-					Long stopTime = System.nanoTime();
-					totalTime += (stopTime - startTime) / 1000000;
-				}
-				
-				totalTime /= numberOfMeasurements;
-				reportBuilder.append("Średni czas dla wielowątkowego algorytmu k-średnich: " + totalTime + " [ms]" + SEP);
+				long time = multithreadedKMeansMeasurements(numberOfMeasurements, numberOfClusters, points);
+				reportBuilder.append("Średni czas dla wielowątkowego algorytmu k-średnich: " + time + " [ms]" + SEP);
 			}
 		}
 		
