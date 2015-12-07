@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ForkJoinPool;
 
 import kjrg.kmeans.traditionalkmeans.clusterer.Clusterer;
 import kjrg.kmeans.traditionalkmeans.clusterer.impl.KMeansClusterer;
@@ -22,6 +23,8 @@ public class KMeansClustering {
 
 	private static final String PROPERTIES_FILENAME = "kjrg/kmeans/traditionalkmeans/config.properties";
 	private static final String SEP = System.getProperty("line.separator");
+	private static final String PARALLELISM_LVL_SYS_PROPERTY = "java.util.concurrent.ForkJoinPool.common.parallelism";
+	private static final String DEF_PARALLELISM_LVL = Integer.toString(Runtime.getRuntime().availableProcessors() - 1);
 	
 	private static long regularKMeansMeasurements(int numberOfMeasurements, int numberOfClusters, List<Point> points) {
 		Clusterer clusterer = new KMeansClusterer(new EuclideanDistance());
@@ -38,9 +41,14 @@ public class KMeansClustering {
 		return totalTime / numberOfMeasurements;
 	}
 	
-	private static long multithreadedKMeansMeasurements(int numberOfMeasurements, int numberOfClusters, List<Point> points) {
+	private static long multithreadedKMeansMeasurements(int numberOfMeasurements, int numberOfClusters, List<Point> points, Integer parallelismLevel) {
 		Clusterer clusterer = new ParallelKMeansClusterer(new EuclideanDistance());
 		long totalTime = 0;
+		
+		Properties systemProperties = System.getProperties();
+		systemProperties.setProperty(PARALLELISM_LVL_SYS_PROPERTY, parallelismLevel.toString());
+		
+		System.out.println("Parallelism: " + ForkJoinPool.getCommonPoolParallelism());
 		
 		for(int i = 1; i <= numberOfMeasurements; i++) {
 			System.out.println("Algorytm wielowątkowy - pomiar " + i);
@@ -50,6 +58,7 @@ public class KMeansClustering {
 			totalTime += (stopTime - startTime) / 1000000;
 		}
 		
+		systemProperties.setProperty(PARALLELISM_LVL_SYS_PROPERTY, DEF_PARALLELISM_LVL);
 		return totalTime / numberOfMeasurements;
 	}
 	
@@ -102,7 +111,7 @@ public class KMeansClustering {
 				e.printStackTrace();
 			}
 		}
-
+		
 		StringBuilder reportBuilder = new StringBuilder();
 		reportBuilder.append("Raport:" + SEP + "Ilość pomiarów: " + numberOfMeasurements + SEP + "Ilość klastrów: " + numberOfClusters + SEP);
 		
@@ -122,14 +131,16 @@ public class KMeansClustering {
 			}
 			
 			reportBuilder.append("Dane wejściowe: " + filepath + SEP);
+
+			// TODO JVM Warmup
 			
 			if(regular) {
 				long time = regularKMeansMeasurements(numberOfMeasurements, numberOfClusters, points);
 				reportBuilder.append("Średni czas dla szeregowego algorytmu k-średnich: " + time + " [ms]" + SEP);
 			}
-			
+
 			if(multithreading) {
-				long time = multithreadedKMeansMeasurements(numberOfMeasurements, numberOfClusters, points);
+				long time = multithreadedKMeansMeasurements(numberOfMeasurements, numberOfClusters, points, maxNumberOfThreads);
 				reportBuilder.append("Średni czas dla wielowątkowego algorytmu k-średnich: " + time + " [ms]" + SEP);
 			}
 		}
