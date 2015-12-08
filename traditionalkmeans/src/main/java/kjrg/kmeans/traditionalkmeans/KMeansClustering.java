@@ -80,7 +80,7 @@ public class KMeansClustering {
 		String input = "";
 		int numberOfMeasurements = 0;
 		int numberOfClusters = 0;
-		int maxNumberOfThreads = 0;
+		int parallelismLevel = 0;
 		boolean regular = false;
 		boolean multithreading = false;
 		
@@ -98,7 +98,7 @@ public class KMeansClustering {
 			input = properties.getProperty("input");
 			numberOfMeasurements = Integer.parseInt(properties.getProperty("numberOfMeasurements"));
 			numberOfClusters = Integer.parseInt(properties.getProperty("numberOfClusters"));
-			maxNumberOfThreads = Integer.parseInt(properties.getProperty("maxThreads"));
+			parallelismLevel = Integer.parseInt(properties.getProperty("parallelismLevel"));
 			regular = Boolean.parseBoolean(properties.getProperty("regular"));
 			multithreading = Boolean.parseBoolean(properties.getProperty("multithreading"));
 			
@@ -132,15 +132,13 @@ public class KMeansClustering {
 			
 			reportBuilder.append("Dane wejściowe: " + filepath + SEP);
 
-			// TODO JVM Warmup
-			
 			if(regular) {
 				long time = regularKMeansMeasurements(numberOfMeasurements, numberOfClusters, points);
 				reportBuilder.append("Średni czas dla szeregowego algorytmu k-średnich: " + time + " [ms]" + SEP);
 			}
 
 			if(multithreading) {
-				long time = multithreadedKMeansMeasurements(numberOfMeasurements, numberOfClusters, points, maxNumberOfThreads);
+				long time = multithreadedKMeansMeasurements(numberOfMeasurements, numberOfClusters, points, parallelismLevel);
 				reportBuilder.append("Średni czas dla wielowątkowego algorytmu k-średnich: " + time + " [ms]" + SEP);
 			}
 		}
