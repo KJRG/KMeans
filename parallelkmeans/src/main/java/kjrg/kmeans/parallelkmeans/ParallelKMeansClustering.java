@@ -53,6 +53,7 @@ public class ParallelKMeansClustering  {
 			totalTime += (stopTime - startTime) / 1000000;
     	}
 
+    	totalTime /= numberOfMeasurements;
     	System.out.println("Sredni czas pomiaru dla instancji " + inputFilepath + ": " + totalTime + " [ms]");
     }
 }
