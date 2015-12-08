@@ -14,6 +14,10 @@ public class ParallelKMeansClustering  {
 	private static final int NUM_OF_ITERATIONS = 20;
 	
     public static void main(String[] args) {
+    	if(args.length < 3) {
+    		System.out.println("Podano zbyt mało argumentów");
+    	}
+    	
     	SparkConf conf = new SparkConf().setAppName("Parallel k-means");
     	JavaSparkContext sc = new JavaSparkContext(conf);
     	
