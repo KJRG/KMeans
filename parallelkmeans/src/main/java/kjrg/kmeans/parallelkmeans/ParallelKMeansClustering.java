@@ -8,7 +8,7 @@ import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.SparkConf;
 
-public class App  {
+public class ParallelKMeansClustering  {
 	
 	private static final String SEPARATOR = ";";
 	private static final int NUM_OF_ITERATIONS = 20;
