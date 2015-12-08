@@ -16,6 +16,7 @@ public class ParallelKMeansClustering  {
     public static void main(String[] args) {
     	if(args.length < 3) {
     		System.out.println("Podano zbyt mało argumentów");
+    		System.exit(1);
     	}
     	
     	SparkConf conf = new SparkConf().setAppName("Parallel k-means");
